@@ -36,6 +36,11 @@ const listQuery = z.object({
  *         schema:
  *           type: string
  *           enum: [newest, price_asc, price_desc, bestseller]
+ *     responses:
+ *       200:
+ *         description: Danh sách sản phẩm
+ *       400:
+ *         description: Query không hợp lệ
  */
 router.get("/", async (req, res) => {
   const parsed = listQuery.safeParse(req.query);
@@ -90,6 +95,16 @@ router.get("/", async (req, res) => {
  *   get:
  *     tags: [Products]
  *     summary: Chi tiết sản phẩm theo slug
+ *     parameters:
+ *       - in: path
+ *         name: slug
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Chi tiết sản phẩm
+ *       404:
+ *         description: Không tìm thấy sản phẩm
  */
 router.get("/slug/:slug", async (req, res) => {
   const product = await prisma.product.findUnique({
@@ -109,6 +124,16 @@ router.get("/slug/:slug", async (req, res) => {
  *   get:
  *     tags: [Products]
  *     summary: Chi tiết sản phẩm theo id
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Chi tiết sản phẩm
+ *       404:
+ *         description: Không tìm thấy sản phẩm
  */
 router.get("/:id", async (req, res) => {
   const product = await prisma.product.findUnique({

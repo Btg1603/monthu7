@@ -79,6 +79,11 @@ router.post("/", async (req, res) => {
  *     tags: [Cart]
  *     summary: Xóa toàn bộ giỏ
  *     security: [{ bearerAuth: [] }]
+ *     responses:
+ *       200:
+ *         description: Xóa giỏ thành công
+ *       401:
+ *         description: Không có token hoặc token không hợp lệ
  */
 router.post("/clear/all", async (req, res) => {
   await prisma.cartItem.deleteMany({ where: { userId: req.user!.userId } });

@@ -1,6 +1,6 @@
 import { useAuthStore } from "../store/authStore";
 
-const base = "";
+const base = "http://localhost:4000";
 
 async function request<T>(
   path: string,

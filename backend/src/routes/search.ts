@@ -53,6 +53,11 @@ const searchQuery = z.object({
  *         schema:
  *           type: string
  *           enum: [relevance, price_asc, price_desc, newest, bestseller, rating]
+ *     responses:
+ *       200:
+ *         description: Tìm kiếm thành công
+ *       400:
+ *         description: Query không hợp lệ
  */
 router.get("/", async (req, res) => {
   const parsed = searchQuery.safeParse(req.query);
@@ -70,10 +75,10 @@ router.get("/", async (req, res) => {
       // Tìm kiếm full-text trong name, description, brand, tags
       {
         OR: [
-          { name: { contains: q } },
-          { description: { contains: q } },
-          { brand: { contains: q } },
-          { tags: { contains: q } },
+          { name: { contains: q, mode: "insensitive" } },
+          { description: { contains: q, mode: "insensitive" } },
+          { brand: { contains: q, mode: "insensitive" } },
+          { tags: { contains: q, mode: "insensitive" } },
         ],
       },
     ],
@@ -176,6 +181,11 @@ router.get("/", async (req, res) => {
  *         name: q
  *         required: true
  *         description: Từ khóa đang nhập
+ *     responses:
+ *       200:
+ *         description: Danh sách gợi ý thành công
+ *       400:
+ *         description: Query không hợp lệ
  */
 router.get("/suggestions", async (req, res) => {
   const q = z.string().min(1).max(50).safeParse(req.query.q);
@@ -185,11 +195,13 @@ router.get("/suggestions", async (req, res) => {
   }
 
   try {
-    // Gợi ý từ name sản phẩm
+    const queryTerm = q.data.trim();
+    
+    // Đơn giản hóa: chỉ tìm những sản phẩm có tên chứa từ khóa
     const suggestions = await prisma.product.findMany({
       where: {
         name: {
-          startsWith: q.data,
+          contains: queryTerm,
         },
       },
       select: {
@@ -202,7 +214,7 @@ router.get("/suggestions", async (req, res) => {
     });
 
     res.json({
-      suggestions: [...new Set(suggestions.map(s => s.name))], // Loại bỏ trùng lặp
+      suggestions: suggestions.map(s => s.name),
     });
   } catch (error) {
     console.error("Suggestions error:", error);

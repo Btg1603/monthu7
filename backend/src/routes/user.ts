@@ -18,10 +18,29 @@ const updateSchema = z.object({
  *     tags: [User]
  *     summary: Hồ sơ
  *     security: [{ bearerAuth: [] }]
+ *     responses:
+ *       200:
+ *         description: Lấy hồ sơ thành công
+ *       404:
+ *         description: Không tìm thấy user
  *   patch:
  *     tags: [User]
  *     summary: Cập nhật hồ sơ
  *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name: { type: string }
+ *               phone: { type: string, nullable: true }
+ *     responses:
+ *       200:
+ *         description: Cập nhật hồ sơ thành công
+ *       400:
+ *         description: Dữ liệu không hợp lệ
  */
 router
   .route("/profile")

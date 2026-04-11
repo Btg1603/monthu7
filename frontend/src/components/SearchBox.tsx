@@ -13,30 +13,34 @@ export default function SearchBox({ placeholder = "Tìm sản phẩm...", classN
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   // Debounce cho suggestions
   useEffect(() => {
-    if (query.length < 2) {
+    if (query.length < 1) {
       setSuggestions([]);
       setShowSuggestions(false);
+      setError(null);
       return;
     }
 
     const timer = setTimeout(async () => {
       setLoading(true);
+      setError(null);
       try {
         const res = await api.searchSuggestions(query);
-        setSuggestions(res.suggestions);
+        setSuggestions(res.suggestions || []);
         setShowSuggestions(true);
       } catch (error) {
         console.error("Suggestions error:", error);
         setSuggestions([]);
+        setError(error instanceof Error ? error.message : "Lỗi tìm kiếm");
       } finally {
         setLoading(false);
       }
-    }, 300); // Debounce 300ms
+    }, 200); // Debounce 200ms - nhanh hơn để liền tay
 
     return () => clearTimeout(timer);
   }, [query]);
@@ -51,6 +55,7 @@ export default function SearchBox({ placeholder = "Tìm sản phẩm...", classN
 
   const handleSuggestionClick = (suggestion: string) => {
     setQuery(suggestion);
+    setError(null);
     navigate(`/search?q=${encodeURIComponent(suggestion)}`);
     setShowSuggestions(false);
     inputRef.current?.blur();
@@ -61,14 +66,14 @@ export default function SearchBox({ placeholder = "Tìm sản phẩm...", classN
   };
 
   const handleFocus = () => {
-    if (suggestions.length > 0) {
+    if (query.length > 0) {
       setShowSuggestions(true);
     }
   };
 
   const handleBlur = () => {
     // Delay để cho click suggestion hoạt động
-    setTimeout(() => setShowSuggestions(false), 150);
+    setTimeout(() => setShowSuggestions(false), 200);
   };
 
   return (
@@ -93,27 +98,29 @@ export default function SearchBox({ placeholder = "Tìm sản phẩm...", classN
         </button>
       </form>
 
-      {showSuggestions && suggestions.length > 0 && (
+      {showSuggestions && (
         <div className={styles.suggestions}>
-          {suggestions.map((suggestion, index) => (
-            <div
-              key={index}
-              className={styles.suggestion}
-              onClick={() => handleSuggestionClick(suggestion)}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-              </svg>
-              <span>{suggestion}</span>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {loading && showSuggestions && (
-        <div className={styles.suggestions}>
-          <div className={styles.loading}>Đang tìm...</div>
+          {error ? (
+            <div className={styles.loading} style={{ color: "#dc3545" }}>{error}</div>
+          ) : suggestions.length > 0 ? (
+            suggestions.map((suggestion, index) => (
+              <div
+                key={index}
+                className={styles.suggestion}
+                onClick={() => handleSuggestionClick(suggestion)}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <span>{suggestion}</span>
+              </div>
+            ))
+          ) : loading ? (
+            <div className={styles.loading}>Đang tìm...</div>
+          ) : query.length > 0 ? (
+            <div className={styles.loading}>Không tìm thấy kết quả</div>
+          ) : null}
         </div>
       )}
     </div>

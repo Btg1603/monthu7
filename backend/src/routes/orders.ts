@@ -18,6 +18,11 @@ const checkoutSchema = z.object({
  *     tags: [Orders]
  *     summary: Lịch sử đơn hàng
  *     security: [{ bearerAuth: [] }]
+ *     responses:
+ *       200:
+ *         description: Danh sách đơn hàng
+ *       401:
+ *         description: Không có token hoặc token không hợp lệ
  */
 router.get("/", async (req, res) => {
   const orders = await prisma.order.findMany({
@@ -37,6 +42,23 @@ router.get("/", async (req, res) => {
  *     tags: [Orders]
  *     summary: Đặt hàng từ giỏ hiện tại
  *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [address, phone]
+ *             properties:
+ *               address: { type: string, minLength: 5 }
+ *               phone: { type: string, minLength: 8 }
+ *     responses:
+ *       201:
+ *         description: Đặt hàng thành công
+ *       400:
+ *         description: Dữ liệu không hợp lệ
+ *       401:
+ *         description: Không có token hoặc token không hợp lệ
  */
 router.post("/checkout", async (req, res) => {
   const parsed = checkoutSchema.safeParse(req.body);

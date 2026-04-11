@@ -69,6 +69,21 @@ router.post("/register", async (req, res) => {
  *   post:
  *     tags: [Auth]
  *     summary: Đăng nhập
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email, password]
+ *             properties:
+ *               email: { type: string, format: email }
+ *               password: { type: string }
+ *     responses:
+ *       200:
+ *         description: Đăng nhập thành công
+ *       401:
+ *         description: Sai email hoặc mật khẩu
  */
 router.post("/login", async (req, res) => {
   const parsed = loginSchema.safeParse(req.body);
@@ -102,6 +117,13 @@ router.post("/login", async (req, res) => {
  *     tags: [Auth]
  *     summary: Thông tin user hiện tại (cần Bearer token)
  *     security: [{ bearerAuth: [] }]
+ *     responses:
+ *       200:
+ *         description: Lấy thông tin user thành công
+ *       401:
+ *         description: Không có token hoặc token không hợp lệ
+ *       404:
+ *         description: Không tìm thấy user
  */
 router.get("/me", authRequired, async (req, res) => {
   const user = await prisma.user.findUnique({
