@@ -1,0 +1,41 @@
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.accent {
+  width: 4px;
+  height: 22px;
+  background: var(--tiki-orange);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.extra {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.sub {
+  font-size: 13px;
+  color: var(--muted);
+}

@@ -1,0 +1,139 @@
+.breadcrumb {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.breadcrumb a:hover {
+  color: var(--tiki-blue);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gallery {
+  position: relative;
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.gallery img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: var(--tiki-orange);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.title {
+  font-size: 1.35rem;
+  margin: 0 0 12px;
+  line-height: 1.4;
+}
+
+.meta {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.priceBlock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #fafafa;
+  border-radius: var(--radius);
+}
+
+.price {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--tiki-blue);
+}
+
+.old {
+  text-decoration: line-through;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.discount {
+  color: var(--tiki-orange);
+  font-weight: 700;
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.qty button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: var(--radius);
+  font-size: 1.1rem;
+}
+
+.qty input {
+  width: 56px;
+  text-align: center;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.msg {
+  color: #0a0;
+  font-weight: 500;
+  margin: 0 0 16px;
+}
+
+.desc h2 {
+  font-size: 1rem;
+  margin: 24px 0 8px;
+}
+
+.desc p {
+  margin: 0;
+  line-height: 1.6;
+  color: #3f3f46;
+  font-size: 0.95rem;
+}

@@ -1,0 +1,27 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+  color: #fff;
+  line-height: 1;
+}
+
+.word {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-transform: lowercase;
+  font-style: italic;
+}
+
+.smile {
+  display: block;
+  width: 56px;
+  height: 6px;
+  margin-top: 4px;
+  margin-left: 2px;
+  background: linear-gradient(90deg, #ffb700 0%, #ff8c00 100%);
+  border-radius: 50%;
+  transform: rotate(-1.5deg);
+}

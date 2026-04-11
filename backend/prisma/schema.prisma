@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique(map: "User_email_key")
+  name      String
+  phone     String?
+  password  String
+  createdAt DateTime @default(now())
+  cartItems CartItem[]
+  orders    Order[]
+
+  @@map("user")
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique(map: "Category_slug_key")
+  icon     String?
+  products Product[]
+
+  @@map("category")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  name        String
+  slug        String   @unique(map: "Product_slug_key")
+  description String   @db.Text
+  price       Int
+  listPrice   Int?
+  image       String   @db.Text
+  rating      Float    @default(4.5)
+  reviewCount Int      @default(0)
+  sold        Int      @default(0)
+  badge       String?
+  brand       String?
+  tags        String?  @db.Text
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+
+  @@index([name], map: "Product_name_idx")
+  @@index([description(length: 191)], map: "Product_description_idx")
+  @@index([brand], map: "Product_brand_idx")
+  @@index([categoryId], map: "Product_categoryId_idx")
+  @@index([price], map: "Product_price_idx")
+  @@index([rating], map: "Product_rating_idx")
+  @@index([sold], map: "Product_sold_idx")
+  @@index([createdAt], map: "Product_createdAt_idx")
+  @@map("product")
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  userId    String
+  productId String
+  quantity  Int     @default(1)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId], map: "CartItem_userId_productId_key")
+  @@index([productId], map: "CartItem_productId_fkey")
+  @@map("cartitem")
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  userId    String
+  status    String      @default("pending")
+  total     Int
+  address   String      @db.Text
+  phone     String
+  createdAt DateTime    @default(now())
+  user      User        @relation(fields: [userId], references: [id])
+  items     OrderItem[]
+
+  @@index([userId], map: "Order_userId_fkey")
+  @@map("order")
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Int
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId], map: "OrderItem_orderId_fkey")
+  @@index([productId], map: "OrderItem_productId_fkey")
+  @@map("orderitem")
+}
