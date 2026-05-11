@@ -1,4 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/client";
 import styles from "./SearchBox.module.css";
@@ -8,90 +14,224 @@ interface SearchBoxProps {
   className?: string;
 }
 
-export default function SearchBox({ placeholder = "Tìm sản phẩm...", className }: SearchBoxProps) {
+export default function SearchBox({
+  placeholder = "Tìm sản phẩm...",
+  className = "",
+}: SearchBoxProps) {
+  const navigate = useNavigate();
+
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate();
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
-  // Debounce cho suggestions
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // cache suggestions
+  const cacheRef = useRef<Record<string, string[]>>({});
+
+  // debounce ref
+  const debounceRef = useRef<number | null>(null);
+
+  // request id chống race condition
+  const requestIdRef = useRef(0);
+
+  // =========================
+  // SEARCH SUGGESTIONS
+  // =========================
   useEffect(() => {
-    if (query.length < 1) {
+    const trimmed = query.trim();
+
+    if (!trimmed) {
       setSuggestions([]);
       setShowSuggestions(false);
-      setError(null);
       return;
     }
 
-    const timer = setTimeout(async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await api.searchSuggestions(query);
-        setSuggestions(res.suggestions || []);
-        setShowSuggestions(true);
-      } catch (error) {
-        console.error("Suggestions error:", error);
-        setSuggestions([]);
-        setError(error instanceof Error ? error.message : "Lỗi tìm kiếm");
-      } finally {
-        setLoading(false);
-      }
-    }, 200); // Debounce 200ms - nhanh hơn để liền tay
+    // clear debounce cũ
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
 
-    return () => clearTimeout(timer);
+    debounceRef.current = setTimeout(async () => {
+      // cache hit
+      if (cacheRef.current[trimmed]) {
+        setSuggestions(cacheRef.current[trimmed]);
+        setShowSuggestions(true);
+        return;
+      }
+
+      const currentRequestId = ++requestIdRef.current;
+
+      try {
+        setLoading(true);
+
+        const res = await api.searchSuggestions(trimmed);
+
+        // bỏ request cũ
+        if (currentRequestId !== requestIdRef.current) return;
+
+        const data = res.suggestions || [];
+
+        cacheRef.current[trimmed] = data;
+
+        setSuggestions(data);
+        setShowSuggestions(true);
+      } catch (err) {
+        console.error("Search suggestion error:", err);
+        setSuggestions([]);
+      } finally {
+        if (currentRequestId === requestIdRef.current) {
+          setLoading(false);
+        }
+      }
+    }, 300);
+
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
   }, [query]);
+
+  // =========================
+  // CLICK OUTSIDE
+  // =========================
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // =========================
+  // SUBMIT
+  // =========================
+  const submitSearch = useCallback(
+    (keyword: string) => {
+      const trimmed = keyword.trim();
+
+      if (!trimmed) return;
+
+      navigate(`/tim-kiem?q=${encodeURIComponent(trimmed)}`);
+
+      setShowSuggestions(false);
+    },
+    [navigate]
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (query.trim()) {
-      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
-      setShowSuggestions(false);
+    submitSearch(query);
+  };
+
+  // =========================
+  // KEYBOARD NAVIGATION
+  // =========================
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showSuggestions || suggestions.length === 0) return;
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setSelectedIndex((prev) =>
+          prev < suggestions.length - 1 ? prev + 1 : 0
+        );
+        break;
+
+      case "ArrowUp":
+        e.preventDefault();
+        setSelectedIndex((prev) =>
+          prev > 0 ? prev - 1 : suggestions.length - 1
+        );
+        break;
+
+      case "Enter":
+        if (selectedIndex >= 0) {
+          e.preventDefault();
+          submitSearch(suggestions[selectedIndex]);
+        }
+        break;
+
+      case "Escape":
+        setShowSuggestions(false);
+        break;
     }
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setQuery(suggestion);
-    setError(null);
-    navigate(`/search?q=${encodeURIComponent(suggestion)}`);
-    setShowSuggestions(false);
-    inputRef.current?.blur();
-  };
+  // reset selected item
+  useEffect(() => {
+    setSelectedIndex(-1);
+  }, [suggestions]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-  };
+  const renderedSuggestions = useMemo(() => {
+    return suggestions.map((suggestion, index) => (
+      <button
+        key={suggestion}
+        type="button"
+        className={`${styles.suggestion} ${
+          selectedIndex === index ? styles.active : ""
+        }`}
+        onClick={() => submitSearch(suggestion)}
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
 
-  const handleFocus = () => {
-    if (query.length > 0) {
-      setShowSuggestions(true);
-    }
-  };
-
-  const handleBlur = () => {
-    // Delay để cho click suggestion hoạt động
-    setTimeout(() => setShowSuggestions(false), 200);
-  };
+        <span>{suggestion}</span>
+      </button>
+    ));
+  }, [suggestions, selectedIndex, submitSearch]);
 
   return (
-    <div className={`${styles.searchBox} ${className || ""}`}>
+    <div
+      ref={wrapperRef}
+      className={`${styles.searchBox} ${className}`}
+    >
       <form onSubmit={handleSubmit} className={styles.form}>
         <input
-          ref={inputRef}
           type="text"
           value={query}
-          onChange={handleInputChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
           placeholder={placeholder}
-          className={styles.input}
           autoComplete="off"
+          className={styles.input}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => {
+            if (suggestions.length > 0) {
+              setShowSuggestions(true);
+            }
+          }}
+          onKeyDown={handleKeyDown}
         />
+
         <button type="submit" className={styles.button}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <circle cx="11" cy="11" r="8"></circle>
             <path d="m21 21-4.35-4.35"></path>
           </svg>
@@ -100,27 +240,17 @@ export default function SearchBox({ placeholder = "Tìm sản phẩm...", classN
 
       {showSuggestions && (
         <div className={styles.suggestions}>
-          {error ? (
-            <div className={styles.loading} style={{ color: "#dc3545" }}>{error}</div>
+          {loading ? (
+            <div className={styles.loading}>
+              Đang tìm...
+            </div>
           ) : suggestions.length > 0 ? (
-            suggestions.map((suggestion, index) => (
-              <div
-                key={index}
-                className={styles.suggestion}
-                onClick={() => handleSuggestionClick(suggestion)}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
-                </svg>
-                <span>{suggestion}</span>
-              </div>
-            ))
-          ) : loading ? (
-            <div className={styles.loading}>Đang tìm...</div>
-          ) : query.length > 0 ? (
-            <div className={styles.loading}>Không tìm thấy kết quả</div>
-          ) : null}
+            renderedSuggestions
+          ) : (
+            <div className={styles.empty}>
+              Không tìm thấy kết quả
+            </div>
+          )}
         </div>
       )}
     </div>

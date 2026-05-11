@@ -1,10 +1,12 @@
 import { ReactNode } from "react";
 
 export function highlightText(text: string, query: string): ReactNode {
-  if (!query.trim()) return text;
+  const trimmedQuery = query.trim();
+  if (!trimmedQuery) return text;
 
-  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
-  const parts = text.split(regex);
+  const escapedQuery = trimmedQuery.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(`(${escapedQuery})`, "i");
+  const parts = text.split(new RegExp(`(${escapedQuery})`, "gi"));
 
   return (
     <>

@@ -75,10 +75,10 @@ router.get("/", async (req, res) => {
       // Tìm kiếm full-text trong name, description, brand, tags
       {
         OR: [
-          { name: { contains: q, mode: "insensitive" } },
-          { description: { contains: q, mode: "insensitive" } },
-          { brand: { contains: q, mode: "insensitive" } },
-          { tags: { contains: q, mode: "insensitive" } },
+          { name: { contains: q } },
+          { description: { contains: q } },
+          { brand: { contains: q } },
+          { tags: { contains: q } },
         ],
       },
     ],
@@ -102,7 +102,7 @@ router.get("/", async (req, res) => {
 
   if (brand) {
     where.AND.push({
-      brand: { contains: brand, mode: "insensitive" },
+      brand: { contains: brand },
     });
   }
 

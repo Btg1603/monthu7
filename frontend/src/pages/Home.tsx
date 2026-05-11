@@ -10,14 +10,50 @@ export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [err, setErr] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const loadProducts = async (nextPage = 1) => {
+    try {
+      setLoading(true);
+      const res = await api.products({ page: nextPage, limit: 12, sort: "bestseller" });
+      const pagination = res.pagination as { totalPages: number };
+
+      setProducts((prev) => (nextPage === 1 ? res.items : [...prev, ...res.items]));
+      setPage(nextPage);
+      setTotalPages(pagination?.totalPages ?? 1);
+    } catch (e: unknown) {
+      if (e instanceof Error) setErr(e.message);
+      else setErr("Đã có lỗi xảy ra khi tải sản phẩm");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    Promise.all([api.categories(), api.products({ limit: 12, sort: "bestseller" })])
-      .then(([c, p]) => {
+    async function loadHomeData() {
+      setLoading(true);
+      try {
+        const [c, p] = await Promise.all([
+          api.categories(),
+          api.products({ page: 1, limit: 12, sort: "bestseller" }),
+        ]);
+
         setCategories(c);
         setProducts(p.items);
-      })
-      .catch((e: Error) => setErr(e.message));
+        const pagination = p.pagination as { totalPages: number };
+        setPage(1);
+        setTotalPages(pagination?.totalPages ?? 1);
+      } catch (e: unknown) {
+        if (e instanceof Error) setErr(e.message);
+        else setErr("Đã có lỗi xảy ra khi tải dữ liệu");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadHomeData();
   }, []);
 
   if (err) {
@@ -95,9 +131,14 @@ export default function Home() {
             title="Gợi ý hôm nay"
             subtitle="Dành riêng cho bạn"
             extra={
-              <Link to="/tim-kiem?q=samsung" className={styles.sectionMore}>
-                Xem thêm →
-              </Link>
+              <button
+                type="button"
+                className={styles.loadMoreButton}
+                onClick={() => loadProducts(page + 1)}
+                disabled={loading || page >= totalPages}
+              >
+                {page >= totalPages ? "Đã tải hết" : loading ? "Đang tải..." : "Xem thêm →"}
+              </button>
             }
           />
           <StaggerContainer className={styles.grid}>
@@ -107,6 +148,18 @@ export default function Home() {
               </StaggerItem>
             ))}
           </StaggerContainer>
+          {page < totalPages && (
+            <div className={styles.loadMoreWrapper}>
+              <button
+                type="button"
+                className={styles.loadMoreButton}
+                onClick={() => loadProducts(page + 1)}
+                disabled={loading}
+              >
+                {loading ? "Đang tải thêm..." : "Xem thêm sản phẩm"}
+              </button>
+            </div>
+          )}
         </Reveal>
       </section>
     </div>

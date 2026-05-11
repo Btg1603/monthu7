@@ -102,3 +102,114 @@
   text-align: center;
   font-style: italic;
 }
+
+
+
+
+
+
+.suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+
+  width: 100%;
+
+  background: white;
+
+  border: 1px solid #eee;
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+
+  z-index: 1000;
+
+  animation: fadeIn 0.15s ease;
+}
+
+.suggestion {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 14px;
+
+  border: none;
+  background: white;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  font-size: 14px;
+  color: #222;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.suggestion svg {
+  flex-shrink: 0;
+  color: #888;
+}
+
+.suggestion:hover {
+  background: #f5f7fb;
+}
+
+.active {
+  background: #eef4ff;
+  color: #1677ff;
+}
+
+.active svg {
+  color: #1677ff;
+}
+
+.loading,
+.empty {
+  padding: 14px;
+
+  text-align: center;
+
+  font-size: 14px;
+  color: #777;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Responsive ===== */
+
+@media (max-width: 768px) {
+  .input {
+    height: 42px;
+    font-size: 14px;
+  }
+
+  .button {
+    width: 34px;
+    height: 34px;
+  }
+
+  .suggestion {
+    padding: 11px 12px;
+    font-size: 13px;
+  }
+}
