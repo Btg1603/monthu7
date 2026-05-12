@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "build:readable": "tsc -b && vite build --mode development",
+    "preview": "vite preview",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"index.html\" \"vite.config.ts\"",
+    "format:dist": "prettier --write \"dist/assets/**/*.js\" \"dist/assets/**/*.css\" \"dist/assets/css/**/*.css\""
   },
   "dependencies": {
     "framer-motion": "^12.38.0",
@@ -19,6 +22,7 @@
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "prettier": "^3.8.3",
     "typescript": "~5.8.2",
     "vite": "^6.2.3"
   }

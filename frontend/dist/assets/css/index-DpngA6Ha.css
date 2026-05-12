@@ -1,0 +1,103 @@
+._title_j9epu_1 {
+  font-size: 1.35rem;
+  margin: 0 0 20px;
+}
+._layout_j9epu_11 {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  ._layout_j9epu_11 {
+    grid-template-columns: 1fr;
+  }
+}
+._list_j9epu_37 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+._row_j9epu_57 {
+  display: grid;
+  grid-template-columns: 96px 1fr auto;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+._row_j9epu_57:last-child {
+  border-bottom: none;
+}
+._thumb_j9epu_83 img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+._name_j9epu_97 {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  display: block;
+}
+._name_j9epu_97:hover {
+  color: var(--tiki-blue);
+}
+._price_j9epu_117 {
+  color: var(--tiki-blue);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+._qty_j9epu_129 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+._qty_j9epu_129 button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 4px;
+}
+._remove_j9epu_159 {
+  margin-left: 12px;
+  color: var(--tiki-orange);
+  border: none !important;
+  background: none !important;
+  width: auto !important;
+  text-decoration: underline;
+  cursor: pointer;
+}
+._lineTotal_j9epu_179 {
+  font-weight: 700;
+  white-space: nowrap;
+}
+._summary_j9epu_189 {
+  background: #fff;
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: calc(var(--header-h) + 16px);
+}
+._summary_j9epu_189 p {
+  margin: 0 0 16px;
+  font-size: 1.05rem;
+}
+._summary_j9epu_189 ._btn_j9epu_217 {
+  width: 100%;
+  margin-bottom: 12px;
+}
+._continue_j9epu_227 {
+  display: block;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--tiki-blue);
+}

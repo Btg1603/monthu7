@@ -1,0 +1,126 @@
+._breadcrumb_16z1r_1 {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+._breadcrumb_16z1r_1 a:hover {
+  color: var(--tiki-blue);
+}
+._layout_16z1r_19 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  ._layout_16z1r_19 {
+    grid-template-columns: 1fr;
+  }
+}
+._gallery_16z1r_45 {
+  position: relative;
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+._gallery_16z1r_45 img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+._badge_16z1r_75 {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: var(--tiki-orange);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  z-index: 1;
+}
+._title_16z1r_101 {
+  font-size: 1.35rem;
+  margin: 0 0 12px;
+  line-height: 1.4;
+}
+._meta_16z1r_113 {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+._priceBlock_16z1r_125 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #fafafa;
+  border-radius: var(--radius);
+}
+._price_16z1r_125 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--tiki-blue);
+}
+._old_16z1r_159 {
+  text-decoration: line-through;
+  color: var(--muted);
+  font-size: 1rem;
+}
+._discount_16z1r_171 {
+  color: var(--tiki-orange);
+  font-weight: 700;
+}
+._qty_16z1r_181 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+._qty_16z1r_181 button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: var(--radius);
+  font-size: 1.1rem;
+}
+._qty_16z1r_181 input {
+  width: 56px;
+  text-align: center;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+}
+._actions_16z1r_231 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+._msg_16z1r_245 {
+  color: #0a0;
+  font-weight: 500;
+  margin: 0 0 16px;
+}
+._msgErr_16z1r_257 {
+  color: var(--tiki-orange);
+  font-weight: 500;
+  margin: 0 0 16px;
+}
+._desc_16z1r_269 h2 {
+  font-size: 1rem;
+  margin: 24px 0 8px;
+}
+._desc_16z1r_269 p {
+  margin: 0;
+  line-height: 1.6;
+  color: #3f3f46;
+  font-size: 0.95rem;
+}

@@ -1,0 +1,21 @@
+._title_1leau_1 {
+  font-size: 1.35rem;
+  margin: 0 0 20px;
+}
+._form_1leau_11 {
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+._form_1leau_11 label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+._err_1leau_41 {
+  color: var(--tiki-orange);
+  margin: 0;
+}

@@ -1,0 +1,35 @@
+._breadcrumb_1qegx_1 {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+._breadcrumb_1qegx_1 a:hover {
+  color: var(--tiki-blue);
+}
+._pageTitle_1qegx_19 {
+  font-size: 1.25rem;
+  margin: 0 0 16px;
+  font-weight: 700;
+}
+._grid_1qegx_31 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+._toolbar_1qegx_43 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+._select_1qegx_61 {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+}
+._error_1qegx_75 {
+  color: var(--tiki-orange);
+}

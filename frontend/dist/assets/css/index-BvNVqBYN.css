@@ -1,0 +1,26 @@
+._title_ovyj2_1 {
+  font-size: 1.35rem;
+  margin: 0 0 20px;
+}
+._form_ovyj2_11 {
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+._form_ovyj2_11 label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+._ok_ovyj2_43 {
+  color: #0a0;
+  margin: 0;
+}
+._err_ovyj2_53 {
+  color: var(--tiki-orange);
+  margin: 0;
+}

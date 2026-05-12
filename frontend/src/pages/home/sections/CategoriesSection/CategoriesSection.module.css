@@ -1,0 +1,88 @@
+.catPanel {
+  background: var(--tiki-white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  padding: 16px 12px 20px;
+  margin: 16px 0 24px;
+}
+
+.catHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 8px 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.catTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.catHint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.catStagger {
+  flex: 0 0 auto;
+  height: auto !important;
+}
+
+.catScroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+.catScroll::-webkit-scrollbar {
+  height: 4px;
+}
+.catScroll::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}
+
+.catItem {
+  flex: 0 0 auto;
+  width: 96px;
+  text-align: center;
+  color: var(--text);
+}
+.catItem:hover .catName {
+  color: var(--tiki-blue);
+}
+
+.catCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 8px;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+  border-radius: 50%;
+  font-size: 28px;
+  border: 1px solid var(--border);
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+.catItem:hover .catCircle {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-sm);
+}
+
+.catName {
+  font-size: 12px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.7em;
+}
